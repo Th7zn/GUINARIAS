@@ -2677,4 +2677,349 @@ function redzlib:MakeWindow(Configs)
 	return Window
 end
 
+local MatrixRain = {}
+MatrixRain.__index = MatrixRain
+
+-- Serviços
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+
+-- Caracteres estilo hacker
+local CHARS = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%&*+-=[]|:;<>?"
+
+function MatrixRain.new(parent)
+    local self = setmetatable({}, MatrixRain)
+    
+    self.Parent = parent
+    self.Enabled = false
+    self.Connections = {}
+    self.Drops = {}
+    self.Speed = 30
+    self.Density = 20
+    self.FadeSpeed = 0.1
+    
+    return self
+end
+
+function MatrixRain:CreateDrop()
+    local drop = {}
+    
+    -- Criar frame para a coluna de caracteres
+    drop.Frame = Instance.new("Frame")
+    drop.Frame.BackgroundTransparency = 1
+    drop.Frame.Size = UDim2.new(0, 20, 1, 0)
+    drop.Frame.Position = UDim2.new(math.random(), 0, 0, -math.random(100, 500))
+    drop.Frame.Parent = self.Parent
+    
+    drop.Characters = {}
+    drop.Length = math.random(8, 20)
+    drop.Speed = math.random(20, 40)
+    drop.XPosition = math.random()
+    
+    -- Criar caracteres iniciais
+    for i = 1, drop.Length do
+        local charLabel = Instance.new("TextLabel")
+        charLabel.Size = UDim2.new(1, 0, 0, 20)
+        charLabel.Position = UDim2.new(0, 0, 0, (i-1) * 20)
+        charLabel.BackgroundTransparency = 1
+        charLabel.Text = string.sub(CHARS, math.random(1, #CHARS), math.random(1, #CHARS))
+        charLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+        charLabel.TextTransparency = (i / drop.Length) * 0.8
+        charLabel.TextSize = 14
+        charLabel.Font = Enum.Font.Code
+        charLabel.TextStrokeTransparency = 0.8
+        charLabel.TextStrokeColor3 = Color3.fromRGB(0, 100, 0)
+        charLabel.Parent = drop.Frame
+        
+        table.insert(drop.Characters, charLabel)
+    end
+    
+    -- Destacar o primeiro caractere
+    if #drop.Characters > 0 then
+        drop.Characters[1].TextColor3 = Color3.fromRGB(255, 255, 255)
+        drop.Characters[1].TextTransparency = 0
+    end
+    
+    return drop
+end
+
+function MatrixRain:UpdateDrop(drop, dt)
+    if not drop.Frame or not drop.Frame.Parent then
+        return false
+    end
+    
+    -- Mover drop para baixo
+    local currentPosition = drop.Frame.Position
+    drop.Frame.Position = UDim2.new(
+        drop.XPosition, 
+        0,
+        currentPosition.Y.Scale, 
+        currentPosition.Y.Offset + (drop.Speed * dt)
+    )
+    
+    -- Rotacionar caracteres
+    for i, char in ipairs(drop.Characters) do
+        if math.random(1, 10) == 1 then
+            char.Text = string.sub(CHARS, math.random(1, #CHARS), math.random(1, #CHARS))
+        end
+        
+        -- Efeito de fade
+        if i == 1 then
+            -- Caractere líder (branco)
+            char.TextColor3 = Color3.fromRGB(255, 255, 255)
+            char.TextTransparency = 0
+        else
+            -- Caracteres seguintes (verde com fade)
+            local transparency = ((i-1) / #drop.Characters) * 0.9
+            char.TextColor3 = Color3.fromRGB(0, math.random(200, 255), 0)
+            char.TextTransparency = transparency
+        end
+    end
+    
+    -- Verificar se saiu da tela
+    if currentPosition.Y.Offset > self.Parent.AbsoluteSize.Y + 100 then
+        drop.Frame:Destroy()
+        return false
+    end
+    
+    return true
+end
+
+function MatrixRain:Start()
+    if self.Enabled then return end
+    
+    self.Enabled = true
+    self.Drops = {}
+    
+    -- Conexão principal de update
+    local connection = RunService.Heartbeat:Connect(function(dt)
+        if not self.Enabled then return end
+        
+        -- Adicionar novos drops se necessário
+        if #self.Drops < self.Density and math.random(1, 3) == 1 then
+            local newDrop = self:CreateDrop()
+            table.insert(self.Drops, newDrop)
+        end
+        
+        -- Atualizar drops existentes
+        for i = #self.Drops, 1, -1 do
+            local drop = self.Drops[i]
+            if not self:UpdateDrop(drop, dt) then
+                table.remove(self.Drops, i)
+            end
+        end
+    end)
+    
+    table.insert(self.Connections, connection)
+end
+
+function MatrixRain:Stop()
+    self.Enabled = false
+    
+    -- Desconectar todas as conexões
+    for _, connection in ipairs(self.Connections) do
+        connection:Disconnect()
+    end
+    self.Connections = {}
+    
+    -- Remover todos os drops
+    for _, drop in ipairs(self.Drops) do
+        if drop.Frame then
+            drop.Frame:Destroy()
+        end
+    end
+    self.Drops = {}
+end
+
+function MatrixRain:SetDensity(density)
+    self.Density = math.clamp(density, 5, 50)
+end
+
+function MatrixRain:SetSpeed(speed)
+    self.Speed = math.clamp(speed, 10, 100)
+end
+
+function MatrixRain:Destroy()
+    self:Stop()
+    setmetatable(self, nil)
+end
+
+-- Versão otimizada para performance
+local FastMatrixRain = {}
+FastMatrixRain.__index = FastMatrixRain
+
+function FastMatrixRain.new(parent)
+    local self = setmetatable({}, FastMatrixRain)
+    
+    self.Parent = parent
+    self.Enabled = false
+    self.Connection = nil
+    self.Drops = {}
+    self.Speed = 25
+    self.Density = 15
+    self.LastSpawn = 0
+    
+    -- Pré-criar pools de caracteres
+    self.CharPool = {}
+    for i = 1, 100 do
+        local char = string.sub(CHARS, math.random(1, #CHARS), math.random(1, #CHARS))
+        table.insert(self.CharPool, char)
+    end
+    
+    return self
+end
+
+function FastMatrixRain:CreateFastDrop()
+    local drop = {}
+    
+    drop.Frame = Instance.new("Frame")
+    drop.Frame.BackgroundTransparency = 1
+    drop.Frame.Size = UDim2.new(0, 15, 0, math.random(100, 300))
+    drop.Frame.Position = UDim2.new(math.random(), 0, 0, -math.random(50, 200))
+    drop.Frame.Parent = self.Parent
+    
+    drop.Speed = math.random(15, 30)
+    drop.Chars = {}
+    drop.Length = math.random(5, 12)
+    
+    -- Criar texto único para melhor performance
+    drop.TextLabel = Instance.new("TextLabel")
+    drop.TextLabel.Size = UDim2.new(1, 0, 0, drop.Length * 12)
+    drop.TextLabel.Position = UDim2.new(0, 0, 0, 0)
+    drop.TextLabel.BackgroundTransparency = 1
+    drop.TextLabel.Text = ""
+    drop.TextLabel.RichText = true
+    drop.TextLabel.TextSize = 11
+    drop.TextLabel.Font = Enum.Font.Code
+    drop.TextLabel.TextXAlignment = Enum.TextXAlignment.Center
+    drop.TextLabel.TextYAlignment = Enum.TextYAlignment.Top
+    drop.TextLabel.Parent = drop.Frame
+    
+    self:UpdateDropText(drop)
+    
+    return drop
+end
+
+function FastMatrixRain:UpdateDropText(drop)
+    local text = ""
+    for i = 1, drop.Length do
+        local char = self.CharPool[math.random(1, #self.CharPool)]
+        if i == 1 then
+            text = text .. string.format('<font color="rgb(255,255,255)">%s</font>\n', char)
+        else
+            local green = math.random(150, 255)
+            local alpha = math.floor(255 * (1 - (i-1)/drop.Length * 0.8))
+            text = text .. string.format('<font color="rgb(0,%d,0)" transparency="%d">%s</font>\n', green, alpha, char)
+        end
+    end
+    drop.TextLabel.Text = text
+end
+
+function FastMatrixRain:UpdateFastDrop(drop, dt)
+    if not drop.Frame or not drop.Frame.Parent then
+        return false
+    end
+    
+    -- Mover
+    local currentPos = drop.Frame.Position
+    drop.Frame.Position = UDim2.new(
+        currentPos.X.Scale,
+        currentPos.X.Offset,
+        currentPos.Y.Scale,
+        currentPos.Y.Offset + (drop.Speed * dt)
+    )
+    
+    -- Atualizar caracteres ocasionalmente
+    if math.random(1, 5) == 1 then
+        self:UpdateDropText(drop)
+    end
+    
+    -- Verificar se saiu da tela
+    if currentPos.Y.Offset > self.Parent.AbsoluteSize.Y + 100 then
+        drop.Frame:Destroy()
+        return false
+    end
+    
+    return true
+end
+
+function FastMatrixRain:Start()
+    if self.Enabled then return end
+    
+    self.Enabled = true
+    
+    self.Connection = RunService.Heartbeat:Connect(function(dt)
+        if not self.Enabled then return end
+        
+        self.LastSpawn = self.LastSpawn + dt
+        
+        -- Spawn de novos drops
+        if #self.Drops < self.Density and self.LastSpawn > 0.2 then
+            local newDrop = self:CreateFastDrop()
+            table.insert(self.Drops, newDrop)
+            self.LastSpawn = 0
+        end
+        
+        -- Atualizar drops
+        for i = #self.Drops, 1, -1 do
+            local drop = self.Drops[i]
+            if not self:UpdateFastDrop(drop, dt) then
+                table.remove(self.Drops, i)
+            end
+        end
+    end)
+end
+
+function FastMatrixRain:Stop()
+    self.Enabled = false
+    if self.Connection then
+        self.Connection:Disconnect()
+        self.Connection = nil
+    end
+    
+    for _, drop in ipairs(self.Drops) do
+        if drop.Frame then
+            drop.Frame:Destroy()
+        end
+    end
+    self.Drops = {}
+end
+
+-- Função para adicionar à sua library
+function RedzLib:AddMatrixRain(parent)
+    local matrix = MatrixRain.new(parent)
+    return matrix
+end
+
+function RedzLib:AddFastMatrixRain(parent)
+    local matrix = FastMatrixRain.new(parent)
+    return matrix
+end
+
+-- Exemplo de uso na library:
+function RedzLib:CreateHackerUI()
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    
+    local MainFrame = Instance.new("Frame")
+    MainFrame.Size = UDim2.new(0, 400, 0, 300)
+    MainFrame.Position = UDim2.new(0.5, -200, 0.5, -150)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    MainFrame.BackgroundTransparency = 0.1
+    MainFrame.Parent = ScreenGui
+    
+    -- Adicionar Matrix Rain
+    local matrixRain = RedzLib:AddFastMatrixRain(MainFrame)
+    matrixRain:Start()
+    
+    -- Sua UI normal aqui...
+    
+    return {
+        GUI = ScreenGui,
+        Matrix = matrixRain
+    }
+end
+
+return MatrixRain
+
 return redzlib
