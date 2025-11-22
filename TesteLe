@@ -17,13 +17,13 @@ local redzlib = {
 			}),
 			["Color Hub 2"] = Color3.fromRGB(0, 0, 60),
 			["Color Stroke"] = Color3.fromRGB(0, 0, 50),
-			["Color Theme"] = Color3.fromRGB(0, 0, 40),
-			["Color Text"] = Color3.fromRGB(255, 255, 255),
-			["Color Dark Text"] = Color3.fromRGB(255, 255, 255)
+			["Color Theme"] = Color3.fromRGB(25, 25, 25),
+			["Color Text"] = Color3.fromRGB(100, 255, 100),
+			["Color Dark Text"] = Color3.fromRGB(70, 220, 70)
 		},
 		Dark = {
 			["Color Hub 1"] = ColorSequence.new({
-				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),   -- أسود
+				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 60)),   -- أسود
 				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(255, 255, 255)), -- أبيض وسط التوهج
 				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))    -- أسود
 			}),
