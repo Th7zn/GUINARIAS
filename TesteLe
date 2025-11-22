@@ -27,8 +27,8 @@ local redzlib = {
 				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(255, 255, 255)), -- أبيض وسط التوهج
 				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))    -- أسود
 			}),
-			["Color Hub 2"] = Color3.fromRGB(0, 0, 0),    -- أسود
-			["Color Stroke"] = Color3.fromRGB(50, 50, 50), -- حدود رمادية داكنة
+			["Color Hub 2"] = Color3.fromRGB(0, 0, 60), 
+			["Color Stroke"] = Color3.fromRGB(15, 15, 15),
 			["Color Theme"] = Color3.fromRGB(25, 25, 25),  -- خلفية رمادية داكنة جداً
 			["Color Text"] = Color3.fromRGB(255, 255, 255), -- نص أبيض
 			["Color Dark Text"] = Color3.fromRGB(180, 180, 180) -- نص رمادي فاتح
