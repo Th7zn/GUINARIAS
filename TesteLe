@@ -1272,7 +1272,7 @@ local function ButtonFrame(Instance, Title, Description, HolderSize)
 		Size = UDim2.new(1, 0, 0, 25),
 		AutomaticSize = "Y",
 		Name = "Option"
-	})Make("Corner", Frame, UDim.new(0, 6))
+	})Make("Corner", Frame, UDim.new(0, 8))
 	
 	LabelHolder = Create("Frame", Frame, {
 		AutomaticSize = "Y",
@@ -1769,7 +1769,7 @@ function redzlib:MakeWindow(Configs)
 		
 		local TabSelect = Make("Button", MainScroll, {
 			Size = UDim2.new(1, 0, 0, 24)
-		})Make("Corner", TabSelect)
+		})Make("Corner", TabSelect, UDim.new(0, 10))
 		
 		local LabelTitle = InsertTheme(Create("TextLabel", TabSelect, {
 			Size = UDim2.new(1, TIcon and -25 or -15, 1),
