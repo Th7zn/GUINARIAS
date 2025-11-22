@@ -18,32 +18,32 @@ local redzlib = {
 			["Color Hub 2"] = Color3.fromRGB(0, 0, 60),
 			["Color Stroke"] = Color3.fromRGB(0, 0, 50),
 			["Color Theme"] = Color3.fromRGB(25, 25, 25),
-			["Color Text"] = Color3.fromRGB(100, 255, 100),
-			["Color Dark Text"] = Color3.fromRGB(70, 220, 70)
+			["Color Text"] = Color3.fromRGB(50, 200, 50),
+			["Color Dark Text"] = Color3.fromRGB(40, 150, 40)
 		},
 		Dark = {
 			["Color Hub 1"] = ColorSequence.new({
-				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 60)),   -- أسود
-				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(255, 255, 255)), -- أبيض وسط التوهج
-				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))    -- أسود
+				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 80)),
+				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(10, 10, 10)),
+				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(20, 20, 20))
 			}),
-			["Color Hub 2"] = Color3.fromRGB(0, 0, 60), 
-			["Color Stroke"] = Color3.fromRGB(15, 15, 15),
-			["Color Theme"] = Color3.fromRGB(25, 25, 25),  -- خلفية رمادية داكنة جداً
-			["Color Text"] = Color3.fromRGB(255, 255, 255), -- نص أبيض
-			["Color Dark Text"] = Color3.fromRGB(180, 180, 180) -- نص رمادي فاتح
+			["Color Hub 2"] = Color3.fromRGB(0, 0, 60),
+			["Color Stroke"] = Color3.fromRGB(0, 0, 50),
+			["Color Theme"] = Color3.fromRGB(25, 25, 25),
+			["Color Text"] = Color3.fromRGB(40, 180, 40),
+			["Color Dark Text"] = Color3.fromRGB(30, 120, 30)
 		},
 		Purple = {
 			["Color Hub 1"] = ColorSequence.new({
-				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),   -- أسود
-				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(255, 255, 255)), -- أبيض
-				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))    -- أسود
+				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),
+				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(255, 255, 255)),
+				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))
 			}),
 			["Color Hub 2"] = Color3.fromRGB(0, 0, 0),
 			["Color Stroke"] = Color3.fromRGB(50, 50, 50),
 			["Color Theme"] = Color3.fromRGB(25, 25, 25),
-			["Color Text"] = Color3.fromRGB(255, 255, 255),
-			["Color Dark Text"] = Color3.fromRGB(180, 180, 180)
+			["Color Text"] = Color3.fromRGB(50, 180, 50),
+			["Color Dark Text"] = Color3.fromRGB(40, 140, 40)
 		},
 	},
 	Info = {
