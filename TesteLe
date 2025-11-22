@@ -21,6 +21,7 @@ local redzlib = {
 			["Color Theme"] = Color3.fromRGB(0, 0, 0),
 			["Color Text"] = Color3.fromRGB(0, 255, 0),
 			["Color Dark Text"] = Color3.fromRGB(0, 200, 0)
+			["Color Accent"] = Color3.fromRGB(100, 200, 255)
 		}
 	},
 	Info = {
@@ -1201,18 +1202,132 @@ AddEle("Button", function(parent, props, ...)
 		Text = "",
 		Size = UDim2.fromScale(1, 1),
 		BackgroundColor3 = Theme["Color Hub 2"],
-		AutoButtonColor = false
+		AutoButtonColor = false,
+		ClipsDescendants = true,
+		BackgroundTransparency = 0
 	}), props), "Frame")
-	
+
+	-- Efeito de ripple (onda)
+	local Ripple = Create("Frame", New, {
+		Size = UDim2.new(0, 0, 0, 0),
+		Position = UDim2.new(0.5, 0, 0.5, 0),
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+		BackgroundTransparency = 0.8,
+		ZIndex = 2
+	})
+	Make("Corner", Ripple, UDim.new(1, 0))
+
+	-- Efeito de brilho no hover
+	local HoverGlow = Create("Frame", New, {
+		Size = UDim2.new(1, 0, 1, 0),
+		BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+		BackgroundTransparency = 0.95,
+		ZIndex = 1,
+		Visible = false
+	})
+
+	-- Efeito de gradiente dinâmico
+	local DynamicGradient = Create("UIGradient", New, {
+		Rotation = 45,
+		Color = ColorSequence.new({
+			ColorSequenceKeypoint.new(0, Theme["Color Hub 2"]),
+			ColorSequenceKeypoint.new(1, Theme["Color Hub 2"])
+		})
+	})
+
+	-- Animação de entrada do mouse
 	New.MouseEnter:Connect(function()
-		New.BackgroundTransparency = 0.4
+		-- Efeito de brilho
+		HoverGlow.Visible = true
+		CreateTween({HoverGlow, "BackgroundTransparency", 0.85, 0.2})
+		
+		-- Leve aumento no gradiente
+		CreateTween({DynamicGradient, "Rotation", 90, 0.3})
+		
+		-- Efeito de elevação sutil
+		if not props.NoElevation then
+			CreateTween({New, "Position", New.Position + UDim2.new(0, 0, 0, -1), 0.2})
+		end
 	end)
+
+	-- Animação de saída do mouse
 	New.MouseLeave:Connect(function()
-		New.BackgroundTransparency = 0
+		-- Remover brilho
+		CreateTween({HoverGlow, "BackgroundTransparency", 0.95, 0.2})
+		CreateTween({HoverGlow, "Visible", false, 0.2})
+		
+		-- Resetar gradiente
+		CreateTween({DynamicGradient, "Rotation", 45, 0.3})
+		
+		-- Resetar elevação
+		if not props.NoElevation then
+			CreateTween({New, "Position", New.Position + UDim2.new(0, 0, 0, 1), 0.2})
+		end
 	end)
-	if args[1] then
-		New.Activated:Connect(args[1])
+
+	-- Efeito de clique
+	New.MouseButton1Down:Connect(function()
+		-- Efeito de pressionar
+		CreateTween({New, "Size", New.Size - UDim2.new(0, 2, 0, 2), 0.1})
+		CreateTween({New, "Position", New.Position + UDim2.new(0, 1, 0, 1), 0.1})
+	end)
+
+	New.MouseButton1Up:Connect(function()
+		-- Resetar tamanho
+		CreateTween({New, "Size", props.Size or UDim2.fromScale(1, 1), 0.1})
+		CreateTween({New, "Position", props.Position or UDim2.new(0, 0, 0, 0), 0.1})
+	end)
+
+	-- Função de ripple effect
+	local function CreateRippleEffect(input)
+		local mouse = Player:GetMouse()
+		local absolutePos = New.AbsolutePosition
+		local absoluteSize = New.AbsoluteSize
+		
+		local mouseX = mouse.X - absolutePos.X
+		local mouseY = mouse.Y - absolutePos.Y
+		
+		Ripple.Position = UDim2.new(0, mouseX, 0, mouseY)
+		Ripple.Size = UDim2.new(0, 0, 0, 0)
+		Ripple.BackgroundTransparency = 0.7
+		
+		-- Animação do ripple
+		local maxSize = math.max(absoluteSize.X, absoluteSize.Y) * 2
+		CreateTween({Ripple, "Size", UDim2.new(0, maxSize, 0, maxSize), 0.6, false})
+		CreateTween({Ripple, "BackgroundTransparency", 1, 0.6, false})
+		CreateTween({Ripple, "Position", UDim2.new(0, mouseX - maxSize/2, 0, mouseY - maxSize/2), 0.6, false})
 	end
+
+	-- Conectar eventos de clique para ripple
+	New.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			CreateRippleEffect(input)
+		end
+	end)
+
+	-- Callback principal
+	if args[1] then
+		New.Activated:Connect(function()
+			-- Pequeno feedback visual ao ativar
+			CreateTween({New, "BackgroundTransparency", 0.2, 0.1})
+			CreateTween({New, "BackgroundTransparency", 0, 0.1, false, 0.1})
+			
+			-- Executar callback
+			args[1]()
+		end)
+	end
+
+	-- Adicionar corner por padrão se não especificado
+	if not props.CornerDisabled then
+		Make("Corner", New, UDim.new(0, 8))
+	end
+
+	-- Adicionar stroke por padrão se não especificado
+	if not props.StrokeDisabled then
+		Make("Stroke", New, {Thickness = 1.2})
+	end
+
 	return New
 end)
 
