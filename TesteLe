@@ -11,39 +11,39 @@ local redzlib = {
 	Themes = {
 		Darker = {
 			["Color Hub 1"] = ColorSequence.new({
-				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 50, 0)),
-				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(10, 10, 10)),
-				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(20, 20, 20))
+				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),   -- Preto
+				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(20, 20, 20)), -- Cinza escuro
+				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))    -- Preto
 			}),
-			["Color Hub 2"] = Color3.fromRGB(0, 40, 0),
-			["Color Stroke"] = Color3.fromRGB(0, 30, 0),
-			["Color Theme"] = Color3.fromRGB(25, 25, 25),
-			["Color Text"] = Color3.fromRGB(50, 200, 50),
-			["Color Dark Text"] = Color3.fromRGB(40, 150, 40)
+			["Color Hub 2"] = Color3.fromRGB(10, 10, 10),    -- Preto muito escuro
+			["Color Stroke"] = Color3.fromRGB(30, 30, 30),   -- Cinza escuro para bordas
+			["Color Theme"] = Color3.fromRGB(0, 255, 0),     -- VERDE para abas selecionadas
+			["Color Text"] = Color3.fromRGB(255, 255, 255),  -- Branco para texto
+			["Color Dark Text"] = Color3.fromRGB(180, 180, 180) -- Cinza claro para texto secundário
 		},
 		Dark = {
 			["Color Hub 1"] = ColorSequence.new({
-				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(100, 255, 100)),   -- Verde escuro (era azul)
-				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(10, 10, 10)),
-				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(20, 20, 20))
+				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),   -- Preto
+				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(40, 40, 40)), -- Cinza médio
+				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))    -- Preto
 			}),
-			["Color Hub 2"] = Color3.fromRGB(0, 30, 0),  -- Verde escuro (era azul)
-			["Color Stroke"] = Color3.fromRGB(100, 255, 100), -- Verde escuro (era cinza)
-			["Color Theme"] = Color3.fromRGB(25, 25, 25),
-			["Color Text"] = Color3.fromRGB(40, 180, 40),
-			["Color Dark Text"] = Color3.fromRGB(30, 120, 30)
+			["Color Hub 2"] = Color3.fromRGB(20, 20, 20),    -- Preto
+			["Color Stroke"] = Color3.fromRGB(50, 50, 50),   -- Cinza para bordas
+			["Color Theme"] = Color3.fromRGB(0, 255, 0),     -- VERDE para abas selecionadas
+			["Color Text"] = Color3.fromRGB(255, 255, 255),  -- Branco para texto
+			["Color Dark Text"] = Color3.fromRGB(200, 200, 200) -- Cinza claro para texto secundário
 		},
 		Purple = {
 			["Color Hub 1"] = ColorSequence.new({
-				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),
-				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(80, 240, 80)),
-				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))
+				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),   -- Preto
+				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(30, 30, 30)), -- Cinza
+				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))    -- Preto
 			}),
-			["Color Hub 2"] = Color3.fromRGB(0, 0, 0),
-			["Color Stroke"] = Color3.fromRGB(50, 50, 50),
-			["Color Theme"] = Color3.fromRGB(60, 200, 60),
-			["Color Text"] = Color3.fromRGB(50, 180, 50),
-			["Color Dark Text"] = Color3.fromRGB(40, 140, 40)
+			["Color Hub 2"] = Color3.fromRGB(15, 15, 15),    -- Preto
+			["Color Stroke"] = Color3.fromRGB(40, 40, 40),   -- Cinza para bordas
+			["Color Theme"] = Color3.fromRGB(0, 255, 0),     -- VERDE para abas selecionadas
+			["Color Text"] = Color3.fromRGB(255, 255, 255),  -- Branco para texto
+			["Color Dark Text"] = Color3.fromRGB(190, 190, 190) -- Cinza claro para texto secundário
 		},
 	},
 	Info = {
